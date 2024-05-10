@@ -1,0 +1,277 @@
+﻿<Window
+    x:Class="DDOrderSync.Views.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DDOrderSync.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="D&amp;D Motor Systems Order Sync"
+    Width="550"
+    Height="620"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+    Icon="/Resources/white_motor_logo_xOx_icon.ico"
+    ResizeMode="NoResize"
+    TextElement.FontSize="14"
+    TextElement.FontWeight="Medium"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="14*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="6" />
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto" MinHeight="147" />
+            <RowDefinition Height="Auto" MinHeight="72" />
+            <RowDefinition Height="Auto" MinHeight="72" />
+            <RowDefinition Height="Auto" MinHeight="62.4" />
+        </Grid.RowDefinitions>
+        <!--  Row 0  -->
+        <materialDesign:ColorZone
+            Grid.ColumnSpan="2"
+            Margin="2,0,2,0"
+            Padding="16,4,16,4"
+            materialDesign:ShadowAssist.ShadowDepth="Depth3"
+            CornerRadius="3"
+            Mode="Inverted" VerticalAlignment="Center" Height="48">
+            <Grid Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="6*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--<Image HorizontalAlignment="Left" VerticalAlignment="Top" Source="/Resources/TALLMANS_White-02.png" Height="70"/>-->
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Style="{DynamicResource MaterialDesignTitleTextBlock}">
+                    D&amp;D Motor Systems Order Sync
+                </TextBlock>
+                <!--<materialDesign:PackIcon Kind="EllipsisVertical" Grid.Column="2" HorizontalAlignment="Right"/>-->
+                <!--<Button Grid.Column="2" HorizontalAlignment="Right" Background="Black" BorderBrush="Black" Padding="0"
+                        Command="{Binding SettingsCommand}">
+                    <materialDesign:PackIcon Kind="EllipsisVertical" Width="24" Height="32"/>
+                </Button>-->
+            </Grid>
+        </materialDesign:ColorZone>
+
+        <!--  Row 1  -->
+        <Grid
+            Visibility="Collapsed"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="24,10,24,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--  Column 0  -->
+            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}" Text="Mode" />
+            <!--  Column 1  -->
+            <ComboBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="100"
+                HorizontalAlignment="Right"
+                ItemsSource="{Binding Modes}"
+                SelectedItem="{Binding Mode}" />
+        </Grid>
+
+
+        <!--  Row 2  -->
+        <Grid
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="24,27,24,19">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition Width="215"/>
+                <ColumnDefinition Width="250"/>-->
+                <ColumnDefinition Width="500" />
+            </Grid.ColumnDefinitions>
+            <!--  Column 0  -->
+            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}" Text="Alliance Database Path" />
+            <!--  Row 1  -->
+            <TextBox
+                Grid.Row="1"
+                Margin="0,10,0,0"
+                Text="{Binding AllianceDBPath}" />
+        </Grid>
+
+        <!--  Row 3  -->
+        <Grid
+            Visibility="Collapsed"
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            Margin="24,1,24,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="340" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--  Column 0  -->
+            <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}" Text="Sales Order Synchronization Interval" />
+            <!--  Column 1  -->
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <ComboBox
+                    Width="50"
+                    HorizontalAlignment="Right"
+                    ItemsSource="{Binding SyncIntervals}"
+                    SelectedItem="{Binding SyncInterval}" />
+                <TextBlock
+                    Padding="10,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Text="min" />
+            </StackPanel>
+        </Grid>
+
+        <!--  Row 4  -->
+        <StackPanel
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Margin="24,20,24,20">
+            <Button
+                Margin="0,0,0,20"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="parts"
+                Content="Synchronize Parts"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Margin="0,20,0,0"
+                Command="{Binding SyncCodesCommand}"
+                Content="Synchronize Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+        </StackPanel>
+
+        <!--  Row 4 (Multi-button Stack Panel)  -->
+        <StackPanel
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Margin="24,20,24,20"
+            Orientation="Vertical"
+            Visibility="Collapsed">
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="parts"
+                Content="Synchronize Parts"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="currencyCodes"
+                Content="Synchronize Currency Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="departmentCodes"
+                Content="Synchronize Department Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="fobCodes"
+                Content="Synchronize FOB Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="regionCodes"
+                Content="Synchronize Region Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="salespeople"
+                Content="Synchronize Salespeople"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="shipViaCodes"
+                Content="Synchronize Ship Via Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <Button
+                Height="25"
+                Margin="0,10"
+                Command="{Binding ManualSyncCommand}"
+                CommandParameter="termsCodes"
+                Content="Synchronize Terms Codes"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+
+        </StackPanel>
+
+        <!--  Row 5  -->
+        <Grid
+            Grid.Row="6"
+            Grid.ColumnSpan="2"
+            Margin="24,20,24,20">
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition Width="250"/>-->
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--  Column 0  -->
+            <!--<Button
+                Command="{Binding TestOrderCommand}"
+                Content="Create Test Sales Order"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />-->
+            <Button
+                Command="{Binding RetrieveOrdersCommand}"
+                Content="Manually Retrieve Orders"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <!--  Column 1  -->
+            <!--<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding DatabasePath}" HorizontalAlignment="Right"/>-->
+        </Grid>
+
+        <!--  Row 6  -->
+        <Grid
+            Grid.Row="7"
+            Grid.ColumnSpan="2"
+            Margin="24,20,24,20">
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition Width="250"/>-->
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--  Column 0  -->
+            <Button
+                Command="{Binding ViewLogCommand}"
+                Content="Open Log"
+                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+            <!--  Column 1  -->
+            <!--<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding DatabasePath}" HorizontalAlignment="Right"/>-->
+        </Grid>
+
+        <!--  Row 7  -->
+        <StackPanel
+            Grid.Row="8"
+            Grid.ColumnSpan="2"
+            Margin="0,0,10,10"
+            HorizontalAlignment="Right">
+            <Label Content="{Binding Version}" />
+        </StackPanel>
+
+    </Grid>
+</Window>
