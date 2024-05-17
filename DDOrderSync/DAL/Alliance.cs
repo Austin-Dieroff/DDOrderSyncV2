@@ -74,7 +74,9 @@ namespace DDOrderSync.DAL
             string soNumber = InsertSalesOrder(customerID, billToAddressID, shipToAddressID, billToContactID, shipToContactID, order);
 
             //Insert Sales Order Lines
-            InsertSalesOrderLines(soNumber, order.Lines);
+            InsertSalesOrderLines(soNumber, order.Lines, DateTime.Parse(order.ShipDate).Date);
+
+            Console.WriteLine("TEST VALUE" + DateTime.Parse(order.ShipDate).ToString());
 
             Console.WriteLine($"[{DateTime.Now.ToString("s")}] " + "Successfully inserted order {0} into Alliance.", order.OrderId);
 
@@ -86,13 +88,13 @@ namespace DDOrderSync.DAL
         /// </summary>
         /// <param name="soNumber">The soNumber<see cref="string"/></param>
         /// <param name="orderLines">The orderLines<see cref="List{OrderLine}"/></param>
-        public static void InsertSalesOrderLines(string soNumber, List<OrderLine> orderLines)
+        public static void InsertSalesOrderLines(string soNumber, List<OrderLine> orderLines, DateTime scheduledShipDate)
         {
             Console.WriteLine($"[{DateTime.Now.ToString("s")}] " + "In Alliance.InsertSalesOrderLines...");
 
             for (int x = 1; x <= orderLines.Count; x++)
             {
-                InsertSalesOrderLine(soNumber, x, orderLines[x - 1]);
+                InsertSalesOrderLine(soNumber, x, orderLines[x - 1], scheduledShipDate);
             }
 
             Console.WriteLine($"[{DateTime.Now.ToString("s")}] " + "Alliance.InsertSalesOrderLines complete");
@@ -105,7 +107,7 @@ namespace DDOrderSync.DAL
         /// <param name="lineNumber">The lineNumber<see cref="int"/></param>
         /// <param name="orderLine">The orderLine<see cref="OrderLine"/></param>
         /// <returns>The <see cref="string"/></returns>
-        public static string InsertSalesOrderLine(string soNumber, int lineNumber, OrderLine orderLine)
+        public static string InsertSalesOrderLine(string soNumber, int lineNumber, OrderLine orderLine, DateTime scheduledShipDate)
         {
             Console.WriteLine($"[{DateTime.Now.ToString("s")}] " + "In Alliance.InsertSalesOrderLine...");
 
@@ -130,7 +132,7 @@ namespace DDOrderSync.DAL
                     cmd.Parameters.AddWithValue("@QuantityOrdered", float.Parse(orderLine.Qty));
                     cmd.Parameters.AddWithValue("@QuantityShipped", 0f);
                     cmd.Parameters.AddWithValue("@QuantityReturned", 0f);
-                    cmd.Parameters.AddWithValue("@ScheduledShipDate", DateTime.Today.Date);
+                    cmd.Parameters.AddWithValue("@ScheduledShipDate", scheduledShipDate);
                     cmd.Parameters.AddWithValue("@CustomerPrice", float.Parse(orderLine.Total));
                     cmd.Parameters.AddWithValue("@SalesUOM", "EA");
                     cmd.Parameters.AddWithValue("@Notes", DBNullCheck(orderLine.Notes, 255));
@@ -179,12 +181,21 @@ namespace DDOrderSync.DAL
 
                     using (OleDbConnection connection = new OleDbConnection(connectionString))
                     {
+                        
+
+
                         OleDbCommand cmd = new OleDbCommand();
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = "insert into SOHeader ([SONumber],[OrderDate],[CustomerID],[SalesPerson],[TermsCode]," +
                             "[ShipViaCode],[FOBCode],[RequiredDate],[EnteredBy],[Notes],[BillToAddress],[ShipToAddress],[OrderedBy]," +
                             "[CustomerPO],[ClosedFlag],[DepartmentCode],[CurrencyCode],[CurrencyRate],[JobNumber],[RegionCode],[Attention]," +
-                            "[BillToContact],[ShipToContact],[Status],[DatePromised]) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            "[BillToContact],[ShipToContact],[Status],[DatePromised]) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                            
+
+                        
+
+
+
                         //cmd.CommandText = "insert into SOHeader ([SONumber],[OrderDate],[CustomerID],[SalesPerson],[TermsCode]," +
                         //    "[ShipViaCode],[FOBCode],[RequiredDate],[EnteredBy],[Notes],[BillToAddress],[ShipToAddress]) values (?,?,?,?,?,?,?,?,?,?,?,?)";
                         cmd.Parameters.AddWithValue("@SONumber", soNumber);
@@ -212,13 +223,18 @@ namespace DDOrderSync.DAL
                         cmd.Parameters.AddWithValue("@ShipToContact", shipToContactID);
                         cmd.Parameters.AddWithValue("@Status", 1);
                         cmd.Parameters.AddWithValue("@DatePromised", DateTime.Parse(order.DatePromised).Date);
+                        
 
                         cmd.Connection = connection;
                         connection.Open();
                         cmd.ExecuteNonQuery();
+
                         Console.WriteLine($"[{DateTime.Now.ToString("s")}] " + "SOHeader record successfully added: " + soNumber);
                         return soNumber;
                     }
+
+                    // Adding Using statement to update the Alliance order with the "shipDate" in Order tray
+
                 }
                 catch (Exception ex)
                 {

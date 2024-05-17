@@ -25,6 +25,9 @@ namespace DDOrderSync.Models
         [FirestoreProperty("date")]
         public string Date { get; set; }
 
+        [FirestoreProperty("shipDate")]
+        public string ShipDate { get; set; }
+
         [FirestoreProperty("dateRequired")]
         public string DateRequired { get; set; }
 
